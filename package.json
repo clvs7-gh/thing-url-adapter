@@ -41,13 +41,17 @@
     "exec": "{nodeLoader} {path}",
     "config": {
       "urls": [],
-      "pollInterval": 5
+      "pollInterval": 5,
+      "isThrottleRequest": false,
+      "throttleLimit": 3
     },
     "schema": {
       "type": "object",
       "required": [
         "urls",
-        "pollInterval"
+        "pollInterval",
+        "isThrottleRequest",
+        "throttleLimit"
       ],
       "properties": {
         "urls": {
@@ -59,6 +63,14 @@
         "pollInterval": {
           "description": "The interval, in seconds, at which to poll property values.",
           "type": "number"
+        },
+        "isThrottleRequest": {
+          "description": "Whether throttle requests.",
+          "type": "boolean"
+        },
+        "throttleLimit": {
+          "description": "Number of throttle limit.",
+          "type": "number"
         }
       }
     }
@@ -66,6 +78,7 @@
   "dependencies": {
     "dnssd": "^0.4.1",
     "node-fetch": "^2.6.0",
+    "throat": "^5.0.0",
     "ws": "^7.3.0"
   },
   "devDependencies": {

@@ -10,10 +10,13 @@
 
 const crypto = require('crypto');
 const dnssd = require('dnssd');
-const fetch = require('node-fetch');
+const _fetch = require('node-fetch');
 const manifest = require('./manifest.json');
+const throat = require('throat');
 const {URL} = require('url');
 const WebSocket = require('ws');
+
+let fetch = _fetch;
 
 const {
   Adapter,
@@ -37,6 +40,8 @@ const PING_INTERVAL = 30 * 1000;
 const POLL_INTERVAL = 5 * 1000;
 const WS_INITIAL_BACKOFF = 1000;
 const WS_MAX_BACKOFF = 30 * 1000;
+const IS_THROTTLE_REQUESTS = false;
+const THROTTLE_LIMIT = 3;
 
 class ThingURLProperty extends Property {
   constructor(device, name, url, propertyDescription) {
@@ -797,6 +802,20 @@ function loadThingURLAdapter(addonManager) {
   }).then((config) => {
     if (typeof config.pollInterval === 'number') {
       adapter.pollInterval = config.pollInterval * 1000;
+    }
+
+    let isThrottleRequests = IS_THROTTLE_REQUESTS;
+    if (typeof config.isThrottleRequests === 'boolean') {
+      isThrottleRequests = config.isThrottleRequests;
+    }
+
+    let throttleLimit = THROTTLE_LIMIT;
+    if (typeof config.throttleLimit === 'number') {
+      throttleLimit = config.throttleLimit;
+    }
+
+    if (isThrottleRequests && throttleLimit > 0) {
+      fetch = (...args) => throat(throttleLimit)(() => _fetch(...args));
     }
 
     for (const url of config.urls) {
