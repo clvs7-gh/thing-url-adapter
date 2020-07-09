@@ -19,7 +19,7 @@
     "default": {
       "urls": [],
       "pollInterval": 5,
-      "isThrottleRequest": false,
+      "isThrottleRequests": false,
       "throttleLimit": 3
     },
     "schema": {
@@ -27,7 +27,7 @@
       "required": [
         "urls",
         "pollInterval",
-        "isThrottleRequest",
+        "isThrottleRequests",
         "throttleLimit"
       ],
       "properties": {
@@ -41,7 +41,7 @@
           "description": "The interval, in seconds, at which to poll property values.",
           "type": "number"
         },
-        "isThrottleRequest": {
+        "isThrottleRequests": {
           "description": "Whether throttle requests.",
           "type": "boolean"
         },
