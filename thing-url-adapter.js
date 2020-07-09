@@ -815,7 +815,8 @@ function loadThingURLAdapter(addonManager) {
     }
 
     if (isThrottleRequests && throttleLimit > 0) {
-      fetch = (...args) => throat(throttleLimit)(() => _fetch(...args));
+      const throttledPromiseFactory = throat(throttleLimit);
+      fetch = (...args) => throttledPromiseFactory(() => _fetch(...args));
     }
 
     for (const url of config.urls) {
